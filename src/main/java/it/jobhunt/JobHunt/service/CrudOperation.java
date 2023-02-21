@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 
 public interface CrudOperation<Entity, EntityHelper, CreateEntityHelper, EntityFilter> {
 
-    Page<Entity> findAll(EntityFilter helper) throws DefaultException;
+    Page<EntityHelper> findAll(EntityFilter helper) throws DefaultException;
 
     EntityHelper create(CreateEntityHelper helper) throws DefaultException;
 
@@ -14,5 +14,4 @@ public interface CrudOperation<Entity, EntityHelper, CreateEntityHelper, EntityF
     EntityHelper edit(EntityHelper helper) throws DefaultException;
 
     void delete(Long id) throws DefaultException;
-
 }

@@ -28,7 +28,7 @@ public class Company {
     private Address address;
     @ManyToMany(fetch = FetchType.LAZY)
     private List<User> users;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<Job> jobs;
 
     public Company(Long id) {

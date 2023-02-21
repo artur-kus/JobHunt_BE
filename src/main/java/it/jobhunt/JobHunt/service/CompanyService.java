@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class CompanyService implements CrudOperation<Company, CompanyHelper, Cre
     private CompanyDao companyDao;
 
     @Override
-    public Page<Company> findAll(CompanyFilter companyFilter) throws DefaultException {
+    public Page<CompanyHelper> findAll(CompanyFilter companyFilter) throws DefaultException {
         ExampleMatcher exampleMatcher = ExampleMatcher.matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.STARTING)
                 .withIgnoreCase();
@@ -46,7 +47,9 @@ public class CompanyService implements CrudOperation<Company, CompanyHelper, Cre
         }
         Company company = new Company(companyFilter);
         Example<Company> companyExample = Example.of(company, exampleMatcher);
-        return companyRepository.findAll(companyExample, PageHelper.getPage(companyFilter.getPage()));
+        Page<Company> page = companyRepository.findAll(companyExample, PageHelper.getPage(companyFilter.getPage()));
+        List<CompanyHelper> companyHelpers = page.getContent().stream().map(CompanyHelper::new).toList();
+        return new PageImpl<>(companyHelpers, page.getPageable(), companyHelpers.size());
     }
 
     @Override

@@ -2,6 +2,7 @@ package it.jobhunt.JobHunt.entity;
 
 import it.jobhunt.JobHunt.enums.UserRole;
 import it.jobhunt.JobHunt.exception.DefaultException;
+import it.jobhunt.JobHunt.helper.user.UserHelper;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,6 +41,14 @@ public class User implements UserDetails {
         this.id = id;
         this.password = password;
         this.email = email;
+    }
+
+    public User(UserHelper userHelper) {
+        this.id = userHelper.getId();
+        this.email = userHelper.getEmail();
+        this.password =userHelper.getPassword();
+        this.role = userHelper.getRole();
+        this.enabled = userHelper.getEnabled();
     }
 
     public static UserRole getRole(User user) throws DefaultException {

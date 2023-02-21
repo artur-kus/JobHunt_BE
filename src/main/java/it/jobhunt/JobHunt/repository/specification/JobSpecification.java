@@ -17,7 +17,7 @@ public class JobSpecification {
         return (root, query, builder) -> {
             final List<Predicate> predicates = new ArrayList<>();
             if (jobFilter != null) {
-                if (jobFilter.getSalary() != null) {
+                if (!GeneralUtil.isNull(jobFilter.getSalary())) {
                     if (jobFilter.getSalary().getSalary() != null) {
                         predicates.add(builder.greaterThanOrEqualTo(root.get("salary.salary"), jobFilter.getSalary().getSalary()));
                     }
@@ -33,22 +33,23 @@ public class JobSpecification {
                     }
                 }
 
-                if (GeneralUtil.isNullOrEmpty(jobFilter.getRole())) {
+                if (!GeneralUtil.isNullOrEmpty(jobFilter.getRole())) {
                     predicates.add(root.get("role").in(jobFilter.getRole()));
                 }
 
-                if (GeneralUtil.isNullOrEmpty(jobFilter.getType())) {
+                if (!GeneralUtil.isNullOrEmpty(jobFilter.getType())) {
                     predicates.add(root.get("type").in(jobFilter.getType()));
                 }
 
-                if (GeneralUtil.isNullOrEmpty(jobFilter.getLanguages())) {
+                if (!GeneralUtil.isNullOrEmpty(jobFilter.getLanguages())) {
                     predicates.add(root.get("languages").in(jobFilter.getLanguages()));
                 }
 
-                if (GeneralUtil.isNullOrEmpty(jobFilter.getIdCompanies())) {
+                if (!GeneralUtil.isNullOrEmpty(jobFilter.getIdCompanies())) {
                     predicates.add(root.get("company.id").in(jobFilter.getIdCompanies()));
                 }
             }
+            if (predicates.isEmpty()) return builder.and();
             predicates.add(QueryByExamplePredicateBuilder.getPredicate(root, builder, example));
             return builder.and(predicates.toArray(new Predicate[0]));
         };

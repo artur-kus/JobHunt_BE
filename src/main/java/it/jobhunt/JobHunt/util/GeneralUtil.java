@@ -9,6 +9,10 @@ public class GeneralUtil {
         return collection == null || collection.isEmpty();
     }
 
+    public static boolean isNullOrEmpty(String str){
+        return str == null || str.equals("");
+    }
+
     public static boolean isNull(Object classes){
         return Objects.isNull(classes);
     }

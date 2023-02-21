@@ -39,13 +39,13 @@ public class Job {
     private JobType type;
     @Column(name = "LANGUAGES")
     @JoinColumn(name = "ID_LANGUAGES")
-    @ElementCollection(targetClass = ProgrammingLanguages.class)
+    @ElementCollection(targetClass = ProgrammingLanguages.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<ProgrammingLanguages> languages;
     @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)
     private JobStatus status;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_COMPANY")
     private Company company;
 
@@ -62,18 +62,31 @@ public class Job {
         this.type = createJobHelper.getType();
         this.languages = createJobHelper.getLanguages();
         this.status = JobStatus.INACTIVE;
+        company.getJobs().add(this);
         this.company = company;
     }
 
     public void fillUpFields(JobHelper jobHelper) {
-        this.name = jobHelper.getName();
-        this.description = jobHelper.getDescription();
+        if (jobHelper.getName() != null) {
+            this.name = jobHelper.getName();
+        }
+        if (jobHelper.getDescription() != null) {
+            this.description = jobHelper.getDescription();
+        }
         if (jobHelper.getSalary() != null) {
             this.salary = jobHelper.getSalary();
         }
-        this.role = jobHelper.getRole();
-        this.type = jobHelper.getType();
-        this.status = jobHelper.getStatus();
-        this.languages = jobHelper.getLanguages();
+        if (jobHelper.getRole() != null) {
+            this.role = jobHelper.getRole();
+        }
+        if (jobHelper.getType() != null) {
+            this.type = jobHelper.getType();
+        }
+        if (jobHelper.getStatus() != null) {
+            this.status = jobHelper.getStatus();
+        }
+        if (jobHelper.getLanguages() != null) {
+            this.languages = jobHelper.getLanguages();
+        }
     }
 }

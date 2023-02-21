@@ -1,11 +1,13 @@
 package it.jobhunt.JobHunt.util;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class PageHelper {
     private Integer number;
@@ -22,11 +24,11 @@ public class PageHelper {
     }
 
     public int getNumber() {
-        return (number != null) ? number : 1;
+        return (number != null) ? number : 0;
     }
 
     public int getSize() {
-        return (size != null) ? size : 1;
+        return (size != null) ? size : 10;
     }
 
     public Sort.Direction getSort() {
