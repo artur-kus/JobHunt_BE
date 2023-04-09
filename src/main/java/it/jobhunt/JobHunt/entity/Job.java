@@ -48,6 +48,10 @@ public class Job {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_COMPANY")
     private Company company;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "ID_JOB")
+    private List<Response> responses;
+
 
     public Job(JobFilter helper) {
         this.id = helper.getId();

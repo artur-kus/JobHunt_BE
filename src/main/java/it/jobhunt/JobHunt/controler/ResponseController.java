@@ -1,24 +1,26 @@
 package it.jobhunt.JobHunt.controler;
 
-import it.jobhunt.JobHunt.helper.job.JobFilter;
-import it.jobhunt.JobHunt.service.DashboardService;
+import it.jobhunt.JobHunt.service.ResponseService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:8011")
+@Slf4j
 @RestController
-@RequestMapping("/api/dashboard")
-public class DashboardController {
+@RequestMapping("/api/response")
+public class ResponseController {
 
     @Autowired
-    private DashboardService dashboardService;
+    private ResponseService responseService;
 
-    @PostMapping("/findAllJobs")
-    public ResponseEntity<?> findAllJobs(@RequestBody(required = false) JobFilter jobFilter) {
+    @PostMapping("/send")
+    public ResponseEntity<?> sendReponse(@RequestParam Long jobId) {
         try {
-            return new ResponseEntity<>(dashboardService.findAllJobs(jobFilter), HttpStatus.OK);
+            responseService.sendResponseByLoggedUser(jobId);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

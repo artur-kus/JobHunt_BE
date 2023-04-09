@@ -3,6 +3,7 @@ package it.jobhunt.JobHunt.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -52,7 +53,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8011"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8011", "http://localhost:8010"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -70,7 +71,9 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/test/all").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/enum/**").permitAll()
+//                .requestMatchers("/api/candidates/**").permitAll()
                 .requestMatchers("/api/dashboard/findAllJobs").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/dashboard/job/get/**").permitAll()
                 .requestMatchers("/api/companies/findAll").hasRole("ADMIN")
                 .requestMatchers("/api/companies/findAll").hasAnyRole("ADMIN", "COMPANY")
                 .anyRequest()

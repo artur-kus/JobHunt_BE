@@ -34,7 +34,9 @@ public class Candidate {
         this.firstName = candidateFilter.getFirstName();
         this.lastName = candidateFilter.getLastName();
         this.address = candidateFilter.getAddress();
-        this.user = new User(candidateFilter.getUser());
+        if (candidateFilter.getUser() != null) {
+            this.user = new User(candidateFilter.getUser());
+        }
     }
 
     public void fillUpFields(CandidateHelper candidateHelper) {
