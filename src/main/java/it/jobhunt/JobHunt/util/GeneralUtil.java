@@ -1,5 +1,6 @@
 package it.jobhunt.JobHunt.util;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -32,7 +33,7 @@ public class GeneralUtil {
             if (pads <= 0) {
                 return str;
             } else if (padLen == 1 && pads <= 8192) {
-                return leftPad(str, size, String.valueOf(padStr.charAt(0)));
+                return leftPad(str, size, padStr.charAt(0));
             } else if (pads == padLen) {
                 return padStr.concat(str);
             } else if (pads < padLen) {
@@ -47,6 +48,29 @@ public class GeneralUtil {
 
                 return (new String(padding)).concat(str);
             }
+        }
+    }
+
+    private static String leftPad(String str, int size, char padChar) {
+        if (str == null) {
+            return null;
+        } else {
+            int pads = size - str.length();
+            if (pads <= 0) {
+                return str;
+            } else {
+                return pads > 8192 ? leftPad(str, size, String.valueOf(padChar)) : repeat(padChar, pads).concat(str);
+            }
+        }
+    }
+
+    private static String repeat(char ch, int repeat) {
+        if (repeat <= 0) {
+            return "";
+        } else {
+            char[] buf = new char[repeat];
+            Arrays.fill(buf, ch);
+            return new String(buf);
         }
     }
 }

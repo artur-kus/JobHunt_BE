@@ -7,9 +7,11 @@ import it.jobhunt.JobHunt.enums.UserRole;
 import it.jobhunt.JobHunt.exception.DefaultException;
 import it.jobhunt.JobHunt.helper.company.CompanyFilter;
 import it.jobhunt.JobHunt.helper.company.CompanyHelper;
-import it.jobhunt.JobHunt.helper.company.CreateCompanyHelper;
+import it.jobhunt.JobHunt.helper.company.CreateCompanyByAdminHelper;
+import it.jobhunt.JobHunt.helper.company.CreateCompanyByUserHelper;
 import it.jobhunt.JobHunt.helper.job.JobFilter;
 import it.jobhunt.JobHunt.persistance.CompanyDao;
+import it.jobhunt.JobHunt.persistance.UserDao;
 import it.jobhunt.JobHunt.repository.CompanyRepository;
 import it.jobhunt.JobHunt.repository.JobRepository;
 import it.jobhunt.JobHunt.repository.UserRepository;
@@ -26,7 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CompanyService implements CrudOperation<Company, CompanyHelper, CreateCompanyHelper, CompanyFilter> {
+public class CompanyService implements CrudOperation<Company, CompanyHelper, CreateCompanyByUserHelper, CompanyFilter> {
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -36,6 +38,8 @@ public class CompanyService implements CrudOperation<Company, CompanyHelper, Cre
     private JobRepository jobRepository;
     @Autowired
     private CompanyDao companyDao;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public Page<CompanyHelper> findAll(CompanyFilter companyFilter) throws DefaultException {
@@ -53,13 +57,20 @@ public class CompanyService implements CrudOperation<Company, CompanyHelper, Cre
     }
 
     @Override
-    public CompanyHelper create(CreateCompanyHelper createCompanyHelper) throws DefaultException {
+    public CompanyHelper create(CreateCompanyByUserHelper createCompanyByUserHelper) throws DefaultException {
         User user = JwtUtils.getLoggedUser();
         if (user.getEmail() != null && !user.getRole().equals(UserRole.USER) && userRepository.existsByEmail(user.getEmail())) {
-            Company company = new Company(createCompanyHelper, user);
+            Company company = new Company(createCompanyByUserHelper, user);
             company = companyRepository.save(company);
             return new CompanyHelper(company);
         } else throw new DefaultException("User doesn't exist");
+    }
+
+    public CompanyHelper createByAdmin(CreateCompanyByAdminHelper helper) throws DefaultException {
+        User user = userDao.getOrCreate(helper.getUser().getEmail(), helper.getUser().getPassword(), UserRole.COMPANY);
+        Company company = new Company(helper, user);
+        company = companyRepository.save(company);
+        return new CompanyHelper(company);
     }
 
     @Override

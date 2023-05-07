@@ -10,6 +10,7 @@ import it.jobhunt.JobHunt.helper.security.SignupRequest;
 import it.jobhunt.JobHunt.persistance.CandidateDao;
 import it.jobhunt.JobHunt.persistance.UserDao;
 import it.jobhunt.JobHunt.repository.CandidateRepository;
+import it.jobhunt.JobHunt.repository.UserRepository;
 import it.jobhunt.JobHunt.util.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -29,6 +30,8 @@ public class CandidateService implements CrudOperation<Candidate, CandidateHelpe
     private UserDao userDao;
     @Autowired
     private CandidateDao candidateDao;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private AuthService authService;
 
@@ -51,8 +54,8 @@ public class CandidateService implements CrudOperation<Candidate, CandidateHelpe
     public CandidateHelper create(CreateCandidateHelper createCandidateHelper) throws DefaultException {
         Candidate candidate = new Candidate(createCandidateHelper);
         authService.register(new SignupRequest(createCandidateHelper.getUser()));
-        User user = userDao.get(createCandidateHelper.getUser().getEmail());
-        candidate.setUser(user);
+//        User user = userDao.get(createCandidateHelper.getUser().getEmail());
+//        candidate.setUser(user);
         candidate = candidateRepository.save(candidate);
         return new CandidateHelper(candidate);
     }
@@ -78,6 +81,9 @@ public class CandidateService implements CrudOperation<Candidate, CandidateHelpe
 
     @Override
     public void delete(Long id) throws DefaultException {
-        //todo
+        Candidate candidate = candidateDao.getCandidate(id);
+        User user = candidate.getUser();
+        userRepository.delete(user);
+        candidateRepository.delete(candidate);
     }
 }

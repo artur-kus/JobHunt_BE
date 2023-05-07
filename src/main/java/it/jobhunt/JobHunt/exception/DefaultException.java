@@ -16,10 +16,15 @@ public class DefaultException extends Exception {
 
     public DefaultException(String message) {
         super(message);
+        this.message = message;
     }
 
     public DefaultException(Map<String, String> errors) {
         this.message = "Error with validation objects";
         this.errors = errors;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

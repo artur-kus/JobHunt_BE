@@ -20,27 +20,15 @@ public class FileController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadCv(@RequestParam Long jobId, @RequestParam String email, @RequestBody MultipartFile file) {
         try {
-            fileService.uploadCv(jobId, email, file);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(fileService.uploadCv(jobId, email, file), HttpStatus.OK);
         } catch (Exception ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping(value = "/response", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> responseByLoggedUser(@RequestParam Long jobId, @RequestParam String email, @RequestBody MultipartFile file) {
-        try {
-            fileService.uploadCv(jobId, email, file);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping(value = "/download/cv}")
-    public HttpEntity<?> downloadResult(@RequestParam Long responseId) {
+    @PostMapping(value = "/download/cv/{responseId}")
+    public HttpEntity<?> downloadResult(@PathVariable Long responseId) {
         try {
             return fileService.downloadResult(responseId);
         } catch (Exception ex) {
@@ -49,8 +37,8 @@ public class FileController {
         }
     }
 
-    @PostMapping(value = "/download/cv/zip")
-    public HttpEntity<?> downloadResults(@RequestParam Long jobId) {
+    @PostMapping(value = "/download/cv/zip/{jobId}", produces="application/zip")
+    public HttpEntity<?> downloadResults(@PathVariable Long jobId) {
         try {
             return fileService.downloadJobResults(jobId);
         } catch (Exception ex) {

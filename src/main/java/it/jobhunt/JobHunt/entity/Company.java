@@ -2,7 +2,7 @@ package it.jobhunt.JobHunt.entity;
 
 import it.jobhunt.JobHunt.helper.company.CompanyFilter;
 import it.jobhunt.JobHunt.helper.company.CompanyHelper;
-import it.jobhunt.JobHunt.helper.company.CreateCompanyHelper;
+import it.jobhunt.JobHunt.helper.company.CreateCompanyByUserHelper;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,11 +35,11 @@ public class Company {
         this.id = id;
     }
 
-    public Company(CreateCompanyHelper createCompanyHelper, User user) {
-        this.name = createCompanyHelper.getName();
-        this.description = createCompanyHelper.getDescription();
-        this.nip = createCompanyHelper.getNip();
-        this.address = createCompanyHelper.getAddress();
+    public Company(CreateCompanyByUserHelper createCompanyByUserHelper, User user) {
+        this.name = createCompanyByUserHelper.getName();
+        this.description = createCompanyByUserHelper.getDescription();
+        this.nip = createCompanyByUserHelper.getNip();
+        this.address = createCompanyByUserHelper.getAddress();
         this.users = Collections.singletonList(user);
     }
 

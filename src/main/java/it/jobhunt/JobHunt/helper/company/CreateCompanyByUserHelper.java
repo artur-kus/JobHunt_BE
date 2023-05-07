@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CreateCompanyHelper {
+public class CreateCompanyByUserHelper {
     private String name;
     private String description;
     @Size(min = 11, max = 11)

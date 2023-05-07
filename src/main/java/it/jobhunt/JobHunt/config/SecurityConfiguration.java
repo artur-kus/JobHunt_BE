@@ -15,7 +15,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -25,18 +24,6 @@ public class SecurityConfiguration {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8011"));
-//        configuration.setAllowedMethods(List.of("*"));
-//        configuration.setAllowedHeaders(List.of("*"));
-//        configuration.setAllowCredentials(true);
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 
     @Bean
     public CorsFilter corsFilter() {
@@ -54,8 +41,9 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:8011", "http://localhost:8010"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
+        configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -71,11 +59,15 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/test/all").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/enum/**").permitAll()
-//                .requestMatchers("/api/candidates/**").permitAll()
-                .requestMatchers("/api/dashboard/findAllJobs").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/dashboard/job/get/**").permitAll()
-                .requestMatchers("/api/companies/findAll").hasRole("ADMIN")
-                .requestMatchers("/api/companies/findAll").hasAnyRole("ADMIN", "COMPANY")
+                .requestMatchers(HttpMethod.POST, "/api/response/send").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/file/upload").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/file/download/cv/**").hasAnyAuthority("ADMIN", "COMPANY")
+                .requestMatchers(HttpMethod.POST, "/api/file/download/cv/zip/**").hasAnyRole("ADMIN", "COMPANY")
+                .requestMatchers("/api/companies/findAll").hasAnyAuthority("ADMIN", "COMPANY")
+                .requestMatchers(HttpMethod.POST, "/api/home/findAllJobs").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/home/job/get/**").permitAll()
+//                .requestMatchers("/api/companies/findAll").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()

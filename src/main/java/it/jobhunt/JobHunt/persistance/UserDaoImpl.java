@@ -1,9 +1,12 @@
 package it.jobhunt.JobHunt.persistance;
 
 import it.jobhunt.JobHunt.entity.User;
+import it.jobhunt.JobHunt.enums.UserRole;
 import it.jobhunt.JobHunt.exception.DefaultException;
+import it.jobhunt.JobHunt.helper.security.SignupRequest;
 import it.jobhunt.JobHunt.helper.user.UserHelper;
 import it.jobhunt.JobHunt.repository.UserRepository;
+import it.jobhunt.JobHunt.service.AuthService;
 import it.jobhunt.JobHunt.util.GeneralUtil;
 import it.jobhunt.JobHunt.util.JwtUtils;
 import lombok.NoArgsConstructor;
@@ -22,6 +25,9 @@ public class UserDaoImpl implements UserDao {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthService authService;
+
     public UserDaoImpl(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
@@ -30,6 +36,15 @@ public class UserDaoImpl implements UserDao {
     public User get(String email) throws DefaultException {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
+    }
+
+    @Override
+    public User getOrCreate(String email, String password, UserRole role) throws DefaultException {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()){
+           authService.register(new SignupRequest(email, password, role));
+        }
+        return get(email);
     }
 
     @Override

@@ -69,7 +69,7 @@ public class JobController {
         }
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> delete(@RequestParam Long jobId) {
         try {
             jobService.delete(jobId);

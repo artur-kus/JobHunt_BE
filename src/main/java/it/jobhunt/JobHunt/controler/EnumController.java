@@ -1,9 +1,6 @@
 package it.jobhunt.JobHunt.controler;
 
-import it.jobhunt.JobHunt.enums.CountryCode;
-import it.jobhunt.JobHunt.enums.JobRole;
-import it.jobhunt.JobHunt.enums.ProgrammingLanguages;
-import it.jobhunt.JobHunt.enums.UserRole;
+import it.jobhunt.JobHunt.enums.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +14,11 @@ import java.util.List;
 @RequestMapping("/api/enum")
 public class EnumController {
 
+    @GetMapping("/user-roles")
+    public List<UserRole> userRolesEnum() {
+        return Arrays.asList(UserRole.values());
+    }
+
     @GetMapping("/programming-languages")
     public List<ProgrammingLanguages> programmingLanguagesEnum() {
         return Arrays.asList(ProgrammingLanguages.values());
@@ -27,10 +29,11 @@ public class EnumController {
         return Arrays.asList(JobRole.values());
     }
 
-    @GetMapping("/user-roles")
-    public List<UserRole> userRoleEnum() {
-        return Arrays.asList(UserRole.values());
+    @GetMapping("/job-types")
+    public List<JobType> jobTypesEnum() {
+        return Arrays.asList(JobType.values());
     }
+
 
     @GetMapping("/countries")
     public List<CountryCode> countriesEnum() {

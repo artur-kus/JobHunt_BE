@@ -83,8 +83,7 @@ public class JobService implements CrudOperation<Job, JobHelper, CreateJobHelper
     @Override
     public void delete(Long jobId) throws DefaultException {
         Job job = jobDao.getJob(jobId);
-        job.setStatus(JobStatus.DELETED);
-        jobRepository.save(job);
+        jobRepository.delete(job);
     }
 
     public JobHelper changeStatus(Long jobId, JobStatus status) throws DefaultException {

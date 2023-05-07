@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface ResponseRepository extends JpaRepository<Response, Long> {
 
     Optional<Response> findByIdAndCvFilePathIsNotNull(Long id);
+    Optional<Response> findByCandidateIdAndJobId(Long candidateId, Long jobId);
 }

@@ -3,7 +3,7 @@ package it.jobhunt.JobHunt.controler;
 import it.jobhunt.JobHunt.exception.DefaultException;
 import it.jobhunt.JobHunt.helper.company.CompanyFilter;
 import it.jobhunt.JobHunt.helper.company.CompanyHelper;
-import it.jobhunt.JobHunt.helper.company.CreateCompanyHelper;
+import it.jobhunt.JobHunt.helper.company.CreateCompanyByUserHelper;
 import it.jobhunt.JobHunt.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,9 +29,9 @@ public class CompanyController {
     }
 
     @PutMapping("/create")
-    public ResponseEntity<?> create(@RequestBody CreateCompanyHelper createCompanyHelper) {
+    public ResponseEntity<?> create(@RequestBody CreateCompanyByUserHelper createCompanyByUserHelper) {
         try {
-            return new ResponseEntity<>(companyService.create(createCompanyHelper), HttpStatus.OK);
+            return new ResponseEntity<>(companyService.create(createCompanyByUserHelper), HttpStatus.OK);
         } catch (DefaultException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);

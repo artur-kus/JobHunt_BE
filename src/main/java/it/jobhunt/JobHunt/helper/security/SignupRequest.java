@@ -25,4 +25,10 @@ public class SignupRequest {
         this.password = user.getPassword();
         this.userRole = UserRole.USER;
     }
+
+    public SignupRequest(String email, String password, UserRole role) {
+        this.email =email;
+        this.password = password;
+        this.userRole = role;
+    }
 }

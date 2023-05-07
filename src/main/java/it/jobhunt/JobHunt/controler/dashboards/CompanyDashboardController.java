@@ -1,4 +1,4 @@
-package it.jobhunt.JobHunt.controler;
+package it.jobhunt.JobHunt.controler.dashboards;
 
 import it.jobhunt.JobHunt.helper.job.JobFilter;
 import it.jobhunt.JobHunt.service.CompanyDashboardService;

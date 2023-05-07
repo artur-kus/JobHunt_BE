@@ -5,32 +5,37 @@ import it.jobhunt.JobHunt.entity.Job;
 import it.jobhunt.JobHunt.entity.Response;
 import it.jobhunt.JobHunt.entity.User;
 import it.jobhunt.JobHunt.exception.DefaultException;
-import it.jobhunt.JobHunt.exception.InternalException;
 import it.jobhunt.JobHunt.repository.CandidateRepository;
 import it.jobhunt.JobHunt.repository.JobRepository;
+import it.jobhunt.JobHunt.repository.ResponseRepository;
+import it.jobhunt.JobHunt.util.DefaultResponse;
 import it.jobhunt.JobHunt.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ResponseService {
 
+    @Autowired
+    private ResponseRepository responseRepository;
     @Autowired
     private JobRepository jobRepository;
     @Autowired
     private CandidateRepository candidateRepository;
 
 
-    public void sendResponseByLoggedUser(Long jobId) throws InternalException, DefaultException {
+    public DefaultResponse sendRepliedByLoggedUser(Long jobId) throws DefaultException {
         User loggedUser = JwtUtils.getLoggedUser();
         Candidate candidate = candidateRepository.findByUserId(loggedUser.getId())
-                .orElseThrow(() -> new InternalException("User " + loggedUser.getId() + " doesn't exist."));
+                .orElseThrow(() -> new DefaultException("User " + loggedUser.getId() + " doesn't exist."));
         Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new InternalException("Job " + jobId + " doesn't exist."));
-        Response response = new Response(candidate);
-        job.setResponses(List.of(response));
-        jobRepository.save(job);
+                .orElseThrow(() -> new DefaultException("Job " + jobId + " doesn't exist."));
+        Optional<Response> existResponse = responseRepository.findByCandidateIdAndJobId(candidate.getId(), jobId);
+        if (existResponse.isPresent()) throw new DefaultException("You already responded to this offer");
+        Response response = new Response(candidate, job);
+        responseRepository.save(response);
+        return new DefaultResponse("Replied for " + job.getName() + ", has been sent to company.");
     }
 }

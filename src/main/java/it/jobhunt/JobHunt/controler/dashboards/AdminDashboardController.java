@@ -1,27 +1,27 @@
-package it.jobhunt.JobHunt.controler;
+package it.jobhunt.JobHunt.controler.dashboards;
 
 import it.jobhunt.JobHunt.exception.DefaultException;
-import it.jobhunt.JobHunt.service.ResponseService;
-import lombok.extern.slf4j.Slf4j;
+import it.jobhunt.JobHunt.helper.company.CreateCompanyByAdminHelper;
+import it.jobhunt.JobHunt.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:8011")
-@Slf4j
 @RestController
-@RequestMapping("/api/response")
-public class ResponseController {
+@RequestMapping("/api/admin")
+public class AdminDashboardController {
 
     @Autowired
-    private ResponseService responseService;
+    private CompanyService companyService;
 
-    @PostMapping("/send")
-    public ResponseEntity<?> sendRepliedByLoggedUser(@RequestParam Long jobId) {
+    @PutMapping("/company/create")
+    public ResponseEntity<?> create(@RequestBody CreateCompanyByAdminHelper helper) {
         try {
-            return new ResponseEntity<>(responseService.sendRepliedByLoggedUser(jobId), HttpStatus.OK);
+            return new ResponseEntity<>(companyService.createByAdmin(helper), HttpStatus.OK);
         } catch (DefaultException ex) {
+            ex.printStackTrace();
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception ex) {
             ex.printStackTrace();
