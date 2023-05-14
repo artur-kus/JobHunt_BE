@@ -27,7 +27,7 @@ public class Job {
     private Long id;
     @Column(name = "NAME")
     private String name;
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", length = 2056)
     private String description;
     @Embedded
     private Salary salary;

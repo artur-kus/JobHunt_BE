@@ -55,7 +55,8 @@ public class FileOperation {
         File file = getFile(path);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(mediaType);
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment");
+        header.set("filename", file.getName());
         return header;
     }
 

@@ -37,7 +37,7 @@ public class FileController {
         }
     }
 
-    @PostMapping(value = "/download/cv/zip/{jobId}", produces="application/zip")
+    @PostMapping(value = "/download/cv/zip/{jobId}")
     public HttpEntity<?> downloadResults(@PathVariable Long jobId) {
         try {
             return fileService.downloadJobResults(jobId);

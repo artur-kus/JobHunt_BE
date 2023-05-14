@@ -54,9 +54,6 @@ public class SecurityConfiguration {
         http
                 .cors().and().csrf().disable()
                 .authorizeHttpRequests()
-//                .requestMatchers("/api/test/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/test/all").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/enum/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/response/send").permitAll()
