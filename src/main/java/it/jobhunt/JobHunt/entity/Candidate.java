@@ -3,6 +3,7 @@ package it.jobhunt.JobHunt.entity;
 import it.jobhunt.JobHunt.helper.candidate.CandidateFilter;
 import it.jobhunt.JobHunt.helper.candidate.CandidateHelper;
 import it.jobhunt.JobHunt.helper.candidate.CreateCandidateHelper;
+import it.jobhunt.JobHunt.helper.signUp.RegisterCandidate;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class Candidate {
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     private User user;
 
-    public Candidate(CreateCandidateHelper helper){
+    public Candidate(CreateCandidateHelper helper) {
         this.firstName = helper.getFirstName();
         this.lastName = helper.getLastName();
         this.address = helper.getAddress();
@@ -37,6 +38,12 @@ public class Candidate {
         if (candidateFilter.getUser() != null) {
             this.user = new User(candidateFilter.getUser());
         }
+    }
+
+    public Candidate(RegisterCandidate request) {
+        this.firstName = request.getFirstName();
+        this.lastName = request.getLastName();
+        this.address = request.getAddress();
     }
 
     public void fillUpFields(CandidateHelper candidateHelper) {

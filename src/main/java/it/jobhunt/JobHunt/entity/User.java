@@ -43,10 +43,6 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public User(String email, String password) {
-
-    }
-
     public User(UserHelper userHelper) {
         this.id = userHelper.getId();
         this.email = userHelper.getEmail();

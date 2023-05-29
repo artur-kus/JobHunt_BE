@@ -7,7 +7,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -56,7 +55,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/enum/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/response/send").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/signup/candidate").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/response/send").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/file/upload").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/file/download/cv/**").hasAnyAuthority("ADMIN", "COMPANY")
                 .requestMatchers(HttpMethod.POST, "/api/file/download/cv/zip/**").hasAnyRole("ADMIN", "COMPANY")
@@ -68,9 +68,9 @@ public class SecurityConfiguration {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

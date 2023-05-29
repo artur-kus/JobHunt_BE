@@ -17,12 +17,13 @@ public class ResponseController {
     @Autowired
     private ResponseService responseService;
 
-    @PostMapping("/send")
+    @GetMapping("/send")
     public ResponseEntity<?> sendRepliedByLoggedUser(@RequestParam Long jobId) {
         try {
             return new ResponseEntity<>(responseService.sendRepliedByLoggedUser(jobId), HttpStatus.OK);
         } catch (DefaultException ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            ex.printStackTrace();
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -2,6 +2,7 @@ package it.jobhunt.JobHunt.controler;
 
 import it.jobhunt.JobHunt.helper.security.LoginRequest;
 import it.jobhunt.JobHunt.helper.security.SignupRequest;
+import it.jobhunt.JobHunt.helper.signUp.RegisterCandidate;
 import it.jobhunt.JobHunt.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,17 @@ public class AuthController {
             ex.printStackTrace();
             log.error("Error while register user - " + request.getEmail() + ", error message: " + ex.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/signup/candidate")
+    public ResponseEntity<?> registerCandidate(@Valid @RequestBody RegisterCandidate request) {
+        try {
+            return new ResponseEntity<>(authService.registerCandidate(request), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("Error while register candidate - " + request.getEmail() + ", error message: " + ex.getMessage());
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

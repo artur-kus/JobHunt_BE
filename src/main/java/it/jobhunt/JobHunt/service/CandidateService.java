@@ -54,10 +54,9 @@ public class CandidateService implements CrudOperation<Candidate, CandidateHelpe
     public CandidateHelper create(CreateCandidateHelper createCandidateHelper) throws DefaultException {
         Candidate candidate = new Candidate(createCandidateHelper);
         authService.register(new SignupRequest(createCandidateHelper.getUser()));
-//        User user = userDao.get(createCandidateHelper.getUser().getEmail());
-//        candidate.setUser(user);
-        candidate = candidateRepository.save(candidate);
-        return new CandidateHelper(candidate);
+        User user = userDao.get(createCandidateHelper.getUser().getEmail());
+        candidate.setUser(user);
+        return new CandidateHelper(candidateRepository.save(candidate));
     }
 
     @Override
