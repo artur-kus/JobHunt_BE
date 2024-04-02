@@ -1,5 +1,6 @@
 package it.jobhunt.JobHunt.controler;
 
+import it.jobhunt.JobHunt.exception.NotFoundException;
 import it.jobhunt.JobHunt.helper.security.LoginRequest;
 import it.jobhunt.JobHunt.helper.security.SignupRequest;
 import it.jobhunt.JobHunt.helper.signUp.RegisterCandidate;
@@ -22,34 +23,16 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@Valid @RequestBody SignupRequest request) {
-        try {
-            return new ResponseEntity<>(authService.register(request), HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            log.error("Error while register user - " + request.getEmail() + ", error message: " + ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(authService.register(request), HttpStatus.OK);
     }
 
     @PostMapping("/signup/candidate")
-    public ResponseEntity<?> registerCandidate(@Valid @RequestBody RegisterCandidate request) {
-        try {
-            return new ResponseEntity<>(authService.registerCandidate(request), HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            log.error("Error while register candidate - " + request.getEmail() + ", error message: " + ex.getMessage());
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> registerCandidate(@Valid @RequestBody RegisterCandidate request) throws NotFoundException {
+        return new ResponseEntity<>(authService.registerCandidate(request), HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            return new ResponseEntity<>(authService.loginUser(loginRequest), HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            log.error("Error while login user - " + loginRequest.getEmail() + ", error message: " + ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(authService.loginUser(loginRequest), HttpStatus.OK);
     }
 }

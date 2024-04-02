@@ -18,15 +18,7 @@ public class ResponseController {
     private ResponseService responseService;
 
     @GetMapping("/send")
-    public ResponseEntity<?> sendRepliedByLoggedUser(@RequestParam Long jobId) {
-        try {
-            return new ResponseEntity<>(responseService.sendRepliedByLoggedUser(jobId), HttpStatus.OK);
-        } catch (DefaultException ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> sendRepliedByLoggedUser(@RequestParam Long jobId) throws DefaultException {
+        return new ResponseEntity<>(responseService.sendRepliedByLoggedUser(jobId), HttpStatus.OK);
     }
 }

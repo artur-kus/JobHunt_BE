@@ -11,6 +11,7 @@ import it.jobhunt.JobHunt.repository.ResponseRepository;
 import it.jobhunt.JobHunt.util.DefaultResponse;
 import it.jobhunt.JobHunt.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,8 +35,9 @@ public class ResponseService {
                 .orElseThrow(() -> new DefaultException("Job " + jobId + " doesn't exist."));
         Optional<Response> existResponse = responseRepository.findByCandidateIdAndJobId(candidate.getId(), jobId);
         if (existResponse.isPresent()) throw new DefaultException("You already responded to this offer");
-        Response response = new Response(candidate, job);
-        responseRepository.save(response);
-        return new DefaultResponse("Replied for " + job.getName() + ", has been sent to company.");
+        responseRepository.save(new Response(candidate, job));
+        return DefaultResponse.builder()
+                .message(String.format("Replied for %s , has been sent to company.", job.getName()))
+                .httpStatus(HttpStatus.OK).build();
     }
 }

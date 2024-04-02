@@ -4,6 +4,7 @@ import com.sun.jdi.InternalException;
 import it.jobhunt.JobHunt.entity.Candidate;
 import it.jobhunt.JobHunt.entity.User;
 import it.jobhunt.JobHunt.enums.UserRole;
+import it.jobhunt.JobHunt.exception.NotFoundException;
 import it.jobhunt.JobHunt.helper.security.LoginRequest;
 import it.jobhunt.JobHunt.helper.security.LoginResponse;
 import it.jobhunt.JobHunt.helper.security.SignupRequest;
@@ -54,11 +55,11 @@ public class AuthService {
         return jwtUtils.generateToken(user);
     }
 
-    public String registerCandidate(RegisterCandidate request) {
+    public String registerCandidate(RegisterCandidate request) throws NotFoundException {
         Candidate candidate = new Candidate(request);
         String token = register(new SignupRequest(request.getEmail(), request.getPassword(), UserRole.USER));
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new InternalException("Cannot find user " + request.getEmail()));
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new NotFoundException(User.class));
         candidate.setUser(user);
         candidateRepository.save(candidate);
         return token;

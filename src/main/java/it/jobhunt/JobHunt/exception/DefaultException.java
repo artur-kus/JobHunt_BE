@@ -20,11 +20,7 @@ public class DefaultException extends Exception {
     }
 
     public DefaultException(Map<String, String> errors) {
-        this.message = "Error with validation objects";
+        this.message = "validation.objects.error";
         this.errors = errors;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }

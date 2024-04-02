@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,7 +56,10 @@ public class FileService {
         String uploadFilePath = saveUploadFile(file, job.getId());
         Response response = new Response(email, uploadFilePath, job);
         responseRepository.save(response);
-        return new DefaultResponse("CV has been sent to " + job.getCompany().getName() + " on " + job.getName() + ".");
+        return DefaultResponse.builder()
+                .message(String.format("CV has been sent to %s on %s", job.getCompany().getName(), job.getName()))
+                .httpStatus(HttpStatus.CREATED)
+                .build();
     }
 
     public String saveUploadFile(MultipartFile file, Long jobId) throws InternalException, IOException {

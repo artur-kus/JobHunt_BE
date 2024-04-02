@@ -1,5 +1,6 @@
 package it.jobhunt.JobHunt.controler;
 
+import it.jobhunt.JobHunt.exception.DefaultException;
 import it.jobhunt.JobHunt.helper.job.JobFilter;
 import it.jobhunt.JobHunt.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +18,11 @@ public class HomeController {
 
     @PostMapping("/findAllJobs")
     public ResponseEntity<?> findAllJobs(@RequestBody(required = false) JobFilter jobFilter) {
-        try {
-            return new ResponseEntity<>(homeService.findAllJobs(jobFilter), HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(homeService.findAllJobs(jobFilter), HttpStatus.OK);
     }
 
     @GetMapping("/job/get")
-    public ResponseEntity<?> getJob(@RequestParam Long id) {
-        try {
-            return new ResponseEntity<>(homeService.getJob(id), HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> getJob(@RequestParam Long id) throws DefaultException {
+        return new ResponseEntity<>(homeService.getJob(id), HttpStatus.OK);
     }
 }

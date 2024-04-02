@@ -22,64 +22,27 @@ public class JobController {
 
     @PostMapping("/findAll")
     public ResponseEntity<?> findAll(@RequestBody(required = false) JobFilter jobFilter) {
-        try {
-            return new ResponseEntity<>(jobService.findAll(jobFilter), HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(jobService.findAll(jobFilter), HttpStatus.OK);
     }
 
     @PutMapping("/create")
-    public ResponseEntity<?> create(@RequestBody CreateJobHelper createJobHelper) {
-        try {
-            return new ResponseEntity<>(jobService.create(createJobHelper), HttpStatus.OK);
-        } catch (DefaultException ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> create(@RequestBody CreateJobHelper createJobHelper) throws DefaultException {
+        return new ResponseEntity<>(jobService.create(createJobHelper), HttpStatus.OK);
     }
 
     @GetMapping("/get")
-    public ResponseEntity<?> get(@RequestParam Long jobId) {
-        try {
-            return new ResponseEntity<>(jobService.get(jobId), HttpStatus.OK);
-        } catch (DefaultException ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> get(@RequestParam Long jobId) throws DefaultException {
+        return new ResponseEntity<>(jobService.get(jobId), HttpStatus.OK);
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> edit(@RequestBody JobHelper jobHelper) {
-        try {
-            return new ResponseEntity<>(jobService.edit(jobHelper), HttpStatus.OK);
-        } catch (DefaultException ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> edit(@RequestBody JobHelper jobHelper) throws DefaultException {
+        return new ResponseEntity<>(jobService.edit(jobHelper), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam Long jobId) {
-        try {
-            jobService.delete(jobId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (DefaultException ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> delete(@RequestParam Long jobId) throws DefaultException {
+        jobService.delete(jobId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

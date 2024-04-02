@@ -1,5 +1,6 @@
 package it.jobhunt.JobHunt.controler.dashboards;
 
+import it.jobhunt.JobHunt.exception.DefaultException;
 import it.jobhunt.JobHunt.helper.job.JobFilter;
 import it.jobhunt.JobHunt.service.CompanyDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,7 @@ public class CompanyDashboardController {
     private CompanyDashboardService service;
 
     @PostMapping("/findAllJobs")
-    public ResponseEntity<?> findAllJobs(@RequestBody(required = false) JobFilter jobFilter) {
-        try {
-            return new ResponseEntity<>(service.findAllJob(jobFilter), HttpStatus.OK);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> findAllJobs(@RequestBody(required = false) JobFilter jobFilter) throws DefaultException {
+        return new ResponseEntity<>(service.findAllJob(jobFilter), HttpStatus.OK);
     }
 }

@@ -5,6 +5,7 @@ import it.jobhunt.JobHunt.entity.Job;
 import it.jobhunt.JobHunt.entity.User;
 import it.jobhunt.JobHunt.enums.UserRole;
 import it.jobhunt.JobHunt.exception.DefaultException;
+import it.jobhunt.JobHunt.exception.NotFoundException;
 import it.jobhunt.JobHunt.helper.company.CompanyFilter;
 import it.jobhunt.JobHunt.helper.company.CompanyHelper;
 import it.jobhunt.JobHunt.helper.company.CreateCompanyByAdminHelper;
@@ -42,7 +43,7 @@ public class CompanyService implements CrudOperation<Company, CompanyHelper, Cre
     private UserDao userDao;
 
     @Override
-    public Page<CompanyHelper> findAll(CompanyFilter companyFilter) throws DefaultException {
+    public Page<CompanyHelper> findAll(CompanyFilter companyFilter) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.STARTING)
                 .withIgnoreCase();
@@ -74,9 +75,9 @@ public class CompanyService implements CrudOperation<Company, CompanyHelper, Cre
     }
 
     @Override
-    public CompanyHelper get(Long companyId) throws DefaultException {
+    public CompanyHelper get(Long companyId) throws NotFoundException {
         Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new DefaultException("Company with id " + companyId + " has not exist."));
+                .orElseThrow(() -> new NotFoundException(Company.class));
         return new CompanyHelper(company);
     }
 

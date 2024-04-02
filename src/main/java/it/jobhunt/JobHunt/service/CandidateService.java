@@ -3,6 +3,7 @@ package it.jobhunt.JobHunt.service;
 import it.jobhunt.JobHunt.entity.Candidate;
 import it.jobhunt.JobHunt.entity.User;
 import it.jobhunt.JobHunt.exception.DefaultException;
+import it.jobhunt.JobHunt.exception.NotFoundException;
 import it.jobhunt.JobHunt.helper.candidate.CandidateFilter;
 import it.jobhunt.JobHunt.helper.candidate.CandidateHelper;
 import it.jobhunt.JobHunt.helper.candidate.CreateCandidateHelper;
@@ -36,7 +37,7 @@ public class CandidateService implements CrudOperation<Candidate, CandidateHelpe
     private AuthService authService;
 
     @Override
-    public Page<CandidateHelper> findAll(CandidateFilter candidateFilter) throws DefaultException {
+    public Page<CandidateHelper> findAll(CandidateFilter candidateFilter) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.STARTING)
                 .withIgnoreCase();
@@ -60,15 +61,15 @@ public class CandidateService implements CrudOperation<Candidate, CandidateHelpe
     }
 
     @Override
-    public CandidateHelper get(Long candidateId) throws DefaultException {
+    public CandidateHelper get(Long candidateId) throws NotFoundException {
         Candidate candidate = candidateRepository.findById(candidateId)
-                .orElseThrow(() -> new DefaultException("Candidate with id " + candidateId + " has not exist."));
+                .orElseThrow(() -> new NotFoundException(Candidate.class));
         return new CandidateHelper(candidate);
     }
 
     @Override
-    public CandidateHelper edit(CandidateHelper candidateHelper) throws DefaultException {
-        if (candidateHelper.getId() == null) throw new DefaultException("Please choose candidate to edit");
+    public CandidateHelper edit(CandidateHelper candidateHelper) throws DefaultException, NotFoundException {
+        if (candidateHelper.getId() == null) throw new NotFoundException(Candidate.class);
         Candidate candidate = candidateDao.getCandidate(candidateHelper.getId());
         candidate.fillUpFields(candidateHelper);
         if (candidateHelper.getUser() != null && candidate.getUser().getEmail() != null) {

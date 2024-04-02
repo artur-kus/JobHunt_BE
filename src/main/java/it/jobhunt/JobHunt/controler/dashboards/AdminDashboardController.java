@@ -17,15 +17,7 @@ public class AdminDashboardController {
     private CompanyService companyService;
 
     @PutMapping("/company/create")
-    public ResponseEntity<?> create(@RequestBody CreateCompanyByAdminHelper helper) {
-        try {
-            return new ResponseEntity<>(companyService.createByAdmin(helper), HttpStatus.OK);
-        } catch (DefaultException ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> create(@RequestBody CreateCompanyByAdminHelper helper) throws DefaultException {
+        return new ResponseEntity<>(companyService.createByAdmin(helper), HttpStatus.OK);
     }
 }

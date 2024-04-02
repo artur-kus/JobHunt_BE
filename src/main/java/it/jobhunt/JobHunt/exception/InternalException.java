@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InternalException extends Exception {
 
-    private String errorMessage = "Internal exception";
+    private String errorMessage = "internal.exception";
 
     public InternalException(String message) {
         super();
