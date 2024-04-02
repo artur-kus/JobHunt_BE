@@ -12,7 +12,6 @@ import java.util.List;
 
 @Data
 public class DashboardJobHelper {
-
     private Long id;
     private String companyName;
     private String companyAddress;

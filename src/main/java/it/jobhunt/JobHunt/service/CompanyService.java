@@ -82,7 +82,7 @@ public class CompanyService implements CrudOperation<Company, CompanyHelper, Cre
     }
 
     @Override
-    public CompanyHelper edit(CompanyHelper companyHelper) throws DefaultException {
+    public CompanyHelper edit(CompanyHelper companyHelper) throws DefaultException, NotFoundException {
         if (companyHelper.getId() == null) throw new DefaultException("Please choose company to edit");
         Company company = companyDao.getCompany(companyHelper.getId());
         company.fillUpFields(companyHelper);

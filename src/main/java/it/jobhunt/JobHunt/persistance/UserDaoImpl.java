@@ -9,8 +9,7 @@ import it.jobhunt.JobHunt.repository.UserRepository;
 import it.jobhunt.JobHunt.service.AuthService;
 import it.jobhunt.JobHunt.util.GeneralUtil;
 import it.jobhunt.JobHunt.util.JwtUtils;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -18,19 +17,12 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
 
-    @Autowired
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthService authService;
-
-    public UserDaoImpl(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final AuthService authService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User get(String email) throws DefaultException {
@@ -41,9 +33,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User getOrCreate(String email, String password, UserRole role) throws DefaultException {
         Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty()){
-           authService.register(new SignupRequest(email, password, role));
-        }
+        if (!userOptional.isEmpty())
+            authService.register(new SignupRequest(email, password, role));
         return get(email);
     }
 
@@ -76,7 +67,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void editData(String email, UserHelper helper) throws DefaultException {
+    public void editData(String email, UserHelper helper) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();

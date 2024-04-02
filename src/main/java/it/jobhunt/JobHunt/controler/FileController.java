@@ -3,7 +3,7 @@ package it.jobhunt.JobHunt.controler;
 import it.jobhunt.JobHunt.exception.DefaultException;
 import it.jobhunt.JobHunt.exception.InternalException;
 import it.jobhunt.JobHunt.service.FileService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,13 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:8011")
 @RestController
 @RequestMapping("/api/file")
 public class FileController {
 
-    @Autowired
-    private FileService fileService;
+    private final FileService fileService;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadCv(@RequestParam Long jobId,

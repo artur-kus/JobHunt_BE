@@ -10,12 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RestControllerAdvice
@@ -25,7 +23,9 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<DefaultResponse> handleAllUnexpectedExceptions(Exception ex) {
-        return handleException(ex, HttpStatus.BAD_REQUEST, "unexpected", DEFAULT_ERROR_MESSAGE);
+        if (ex instanceof MethodArgumentNotValidException manve) {
+            return handleException(ex, HttpStatus.BAD_REQUEST, "validation", getErrorMessage(manve));
+        } else return handleException(ex, HttpStatus.BAD_REQUEST, "unexpected", DEFAULT_ERROR_MESSAGE);
     }
 
     @ExceptionHandler(DefaultException.class)
@@ -36,13 +36,6 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<DefaultResponse> handleNotFoundException(NotFoundException ex) {
         return handleException(ex, HttpStatus.NOT_FOUND, "not.found", ex.getMessage());
-    }
-
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public DefaultException handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return new DefaultException(getErrors(ex));
     }
 
     private ResponseEntity<DefaultResponse> handleException(Exception ex, HttpStatus httpStatus,
@@ -56,13 +49,9 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(defaultResponse, httpStatus);
     }
 
-    private Map<String, String> getErrors(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
+    private String getErrorMessage(MethodArgumentNotValidException ex) {
+        return ex.getBindingResult().getAllErrors().stream()
+                .map(error -> ((FieldError) error).getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(";"));
     }
 }

@@ -4,27 +4,28 @@ import it.jobhunt.JobHunt.entity.Company;
 import it.jobhunt.JobHunt.entity.User;
 import it.jobhunt.JobHunt.enums.UserRole;
 import it.jobhunt.JobHunt.exception.DefaultException;
+import it.jobhunt.JobHunt.exception.NotFoundException;
 import it.jobhunt.JobHunt.repository.CompanyRepository;
 import it.jobhunt.JobHunt.util.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class CompanyDaoImpl implements CompanyDao {
 
-    @Autowired
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
     @Override
-    public Company getCompany(Long idCompany) throws DefaultException {
+    public Company getCompany(Long idCompany) throws DefaultException, NotFoundException {
         User user = JwtUtils.getLoggedUser();
         UserRole role = User.getRole(user);
-        return ((role.equals(UserRole.COMPANY))
+        return (role.equals(UserRole.COMPANY)
                 ? companyRepository.findByIdAndUserEmail(idCompany, user.getEmail())
                 : companyRepository.findById(idCompany))
-                .orElseThrow(() -> new DefaultException("Company with id " + idCompany + " has not exist."));
+                .orElseThrow(() -> new NotFoundException(Company.class));
     }
 
     @Override

@@ -80,7 +80,7 @@ public class CandidateService implements CrudOperation<Candidate, CandidateHelpe
     }
 
     @Override
-    public void delete(Long id) throws DefaultException {
+    public void delete(Long id) throws DefaultException, NotFoundException {
         Candidate candidate = candidateDao.getCandidate(id);
         User user = candidate.getUser();
         userRepository.delete(user);

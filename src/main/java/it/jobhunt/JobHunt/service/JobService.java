@@ -6,6 +6,7 @@ import it.jobhunt.JobHunt.entity.User;
 import it.jobhunt.JobHunt.enums.JobStatus;
 import it.jobhunt.JobHunt.enums.UserRole;
 import it.jobhunt.JobHunt.exception.DefaultException;
+import it.jobhunt.JobHunt.exception.NotFoundException;
 import it.jobhunt.JobHunt.helper.job.CreateJobHelper;
 import it.jobhunt.JobHunt.helper.job.JobFilter;
 import it.jobhunt.JobHunt.helper.job.JobHelper;
@@ -61,13 +62,13 @@ public class JobService implements CrudOperation<Job, JobHelper, CreateJobHelper
     }
 
     @Override
-    public JobHelper get(Long jobId) throws DefaultException {
+    public JobHelper get(Long jobId) throws DefaultException, NotFoundException {
         Job job = jobDao.getJob(jobId);
         return new JobHelper(job);
     }
 
     @Override
-    public JobHelper edit(JobHelper jobHelper) throws DefaultException {
+    public JobHelper edit(JobHelper jobHelper) throws DefaultException, NotFoundException {
         if (jobHelper.getId() == null) throw new DefaultException("Please choose job to edit");
         Job job = jobDao.getJob(jobHelper.getId());
         //TODO Przygotuj osobny kontroler ze sprawdzeniem czy odpowiedni użytkownik jest z danej firmy
@@ -81,12 +82,12 @@ public class JobService implements CrudOperation<Job, JobHelper, CreateJobHelper
     }
 
     @Override
-    public void delete(Long jobId) throws DefaultException {
+    public void delete(Long jobId) throws DefaultException, NotFoundException {
         Job job = jobDao.getJob(jobId);
         jobRepository.delete(job);
     }
 
-    public JobHelper changeStatus(Long jobId, JobStatus status) throws DefaultException {
+    public JobHelper changeStatus(Long jobId, JobStatus status) throws DefaultException, NotFoundException {
         Job job = jobDao.getJob(jobId);
         job.setStatus(status);
         job = jobRepository.save(job);

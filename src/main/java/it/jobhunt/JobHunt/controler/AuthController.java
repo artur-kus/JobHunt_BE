@@ -6,20 +6,18 @@ import it.jobhunt.JobHunt.helper.security.SignupRequest;
 import it.jobhunt.JobHunt.helper.signUp.RegisterCandidate;
 import it.jobhunt.JobHunt.service.AuthService;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+@RequiredArgsConstructor
 @CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@Valid @RequestBody SignupRequest request) {

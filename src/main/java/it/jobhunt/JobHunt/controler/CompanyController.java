@@ -6,18 +6,18 @@ import it.jobhunt.JobHunt.helper.company.CompanyFilter;
 import it.jobhunt.JobHunt.helper.company.CompanyHelper;
 import it.jobhunt.JobHunt.helper.company.CreateCompanyByUserHelper;
 import it.jobhunt.JobHunt.service.CompanyService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:8011")
 @RestController
 @RequestMapping("/api/companies")
 public class CompanyController {
 
-    @Autowired
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
     @PostMapping("/findAll")
     public ResponseEntity<?> findAll(@RequestBody(required = false) CompanyFilter companyFilter) {
@@ -35,7 +35,7 @@ public class CompanyController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> edit(@RequestBody CompanyHelper companyHelper) throws DefaultException {
+    public ResponseEntity<?> edit(@RequestBody CompanyHelper companyHelper) throws DefaultException, NotFoundException {
         return new ResponseEntity<>(companyService.edit(companyHelper), HttpStatus.OK);
     }
 

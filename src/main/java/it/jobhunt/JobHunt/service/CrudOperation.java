@@ -10,9 +10,9 @@ public interface CrudOperation<Entity, EntityHelper, CreateEntityHelper, EntityF
 
     EntityHelper create(CreateEntityHelper helper) throws DefaultException;
 
-    EntityHelper get(Long id) throws NotFoundException;
+    EntityHelper get(Long id) throws NotFoundException, DefaultException;
 
     EntityHelper edit(EntityHelper helper) throws DefaultException, NotFoundException;
 
-    void delete(Long id) throws DefaultException;
+    void delete(Long id) throws DefaultException, NotFoundException;
 }
